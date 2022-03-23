@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from db.models import User, Job
 from models import job
-from sqlalchemy import or_
+from sqlalchemy import and_, or_
 
 def add(db: Session, job: job.JobAdd, user: User):
     db_job = Job(
@@ -19,7 +19,6 @@ def add(db: Session, job: job.JobAdd, user: User):
         post_date = job.post_date,
         language = job.language,
         user_id = user.id
-        
     )
     db.add(db_job)
     db.commit()
@@ -27,8 +26,33 @@ def add(db: Session, job: job.JobAdd, user: User):
     
     return db_job
 
+def edit(db: Session, job: job.JobEdit, user: User):
+    db_job = db.query(Job).filter(and_(Job.id == job.id, Job.user_id == user.id)).first()
+    
+    db_job.title = job.title,
+    db_job.link = job.link,
+    db_job.description = job.description,
+    db_job.category = job.category,
+    db_job.requirement = job.requirement,
+    db_job.company_name = job.company_name,
+    db_job.company_description = job.company_description,
+    db_job.location = job.location,
+    db_job.company_size = job.company_size,
+    db_job.company_logo = job.company_logo,
+    db_job.salary = job.salary,
+    db_job.post_date = job.post_date,
+    db_job.language = job.language,
+    
+    db.commit()
+    
+    return db_job
+
+def delete(db: Session, id: int, user: User):
+    db.query(Job).filter(and_(Job.id == id, Job.user_id == user.id)).delete()
+    db.commit()
+
 def search(db: Session, text: str, skip: int, take: int):
-    return db.query(Job, User).filter(
+    return db.query(Job).filter(
         or_(
             Job.title.like('%' + text + '%'),
             Job.link.like('%' + text + '%'),

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from .user import User
+
 class JobBase(BaseModel):
     id: int
     title: str
@@ -19,9 +19,11 @@ class JobBase(BaseModel):
 class JobAdd(JobBase):
     pass
 
+class JobEdit(JobBase):
+    pass
+
 class Job(JobBase):
     user_id: int
-    user: User
     class Config:
         orm_mode = True
     

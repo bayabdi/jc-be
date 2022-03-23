@@ -21,8 +21,4 @@ def login(model: user.Auth, db: Session = Depends(get_db)):
     
     if (user is None) or (not verify_password(model.password, user.hashed_password)):
         raise HTTPException(status_code = 401, detail = "Invalid email and/or password")
-    return encode_token(user.email)   
-
-@router.get('/protected', dependencies=[Depends(auth_wrapper)])
-def protected(username=Depends(auth_wrapper)):
-    return { 'name': username }
+    return encode_token(user.email)
