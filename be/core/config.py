@@ -1,5 +1,7 @@
 from distutils.command.config import config
+from starlette.config import Config
 
+config = Config(".env")
 DATABASE_URL = "postgresql://jcUser:string@localhost:5432/jc"
 ACCES_TOKEN_EXPIRE_MINUTES = 24 * 60
 ALGORITHM = "HS256"
