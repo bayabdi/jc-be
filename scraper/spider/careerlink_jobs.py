@@ -1,16 +1,16 @@
-from ast import Not
-from unicodedata import category
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 import db
+from selenium.webdriver.firefox.options import Options
 
-path=r"C:\chromedriver.exe"
+options = Options()
+options.headless = True
+browser = webdriver.Firefox(
+    options=options,
+    executable_path='D:\geckodriver\geckodriver.exe'
+)
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--user-agent="Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 640 XL LTE) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Mobile Safari/537.36 Edge/12.10166"')
-
-browser = webdriver.Chrome(executable_path=path, chrome_options=chrome_options)
 link = 'https://www.careerlink.vn'
 
 def getJobInfo (jobLink, f):
@@ -19,9 +19,7 @@ def getJobInfo (jobLink, f):
     f.write('Link -> ' + jobLink)
     
     browser.get(jobLink + str('\n'))
-    action = webdriver.ActionChains(browser)
-    action.move_by_offset(10, 20).perform()
-    soup = BeautifulSoup(browser.page_source)
+    soup = BeautifulSoup(browser.page_source, features="html.parser")
     
     title = ''
     if len(soup.select('h1.job-title')) > 0:
@@ -103,19 +101,19 @@ def getJobInfo (jobLink, f):
 def getJobList (pageN):
     URL = link + '/vieclam/list?page=' + str(pageN)
     browser.get(URL)
-    action = webdriver.ActionChains(browser)
-    action.move_by_offset(10, 20).perform()
     soup = BeautifulSoup(browser.page_source)
 
     job_elements = soup.find_all("a", class_="job-link", href=True)
     
-    with open('readme.txt', 'w', encoding='utf-8') as f:
+    with open('careerlink.txt', 'w', encoding='utf-8') as f:
         for job_element in job_elements:
             jobLink = link + job_element['href'] 
             getJobInfo(jobLink, f)
-            time.sleep(4)
+            time.sleep(2)
             
 def run():
     for page in range(1, 21):
         getJobList(page)
-        time.sleep(4)
+        time.sleep(3)
+    
+    browser.quit()

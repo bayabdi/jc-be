@@ -30,7 +30,7 @@ def insert(
         cursor = connection.cursor()
         
         sql = """
-            INSERT INTO "Jobs"(
+            INSERT INTO "job"(
 	            title,
 	            link,
 	            description,
