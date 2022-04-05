@@ -6,10 +6,10 @@ from selenium.webdriver.firefox.options import Options
 from webdriver_manager.firefox import GeckoDriverManager
 
 options = Options()
-#options.headless = True
+options.headless = True
 browser = webdriver.Firefox(
     options=options,
-    executable_path='D:\geckodriver\geckodriver.exe'
+    executable_path=GeckoDriverManager().install()
 )
 
 link = 'https://www.vietnamworks.com'
