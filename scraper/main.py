@@ -4,7 +4,7 @@ from spider import timviecnhanh
 from selenium.webdriver.firefox.options import Options
 from selenium import webdriver
 import os
-directory = os.getcwd() + '\geckodriver'
+directory = os.getcwd() + 'geckodriver'
 
 options = Options()
 options.headless = True
