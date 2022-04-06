@@ -1,19 +1,10 @@
-from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
 import db
-from selenium.webdriver.firefox.options import Options
-
-options = Options()
-options.headless = True
-browser = webdriver.Firefox(
-    options=options,
-    executable_path='geckodriver'
-)
 
 link = 'https://timviecnhanh.com'
 
-def getJobInfo(jobLink, f):
+def getJobInfo(jobLink, f, browser):
     print('Link   --->  ' + jobLink)
     
     browser.get(jobLink)
@@ -90,7 +81,7 @@ def getJobInfo(jobLink, f):
         language
     )
     
-def getJobList(pageN):
+def getJobList(pageN, browser):
     URL = link + '/vieclam/timkiem?action=search&page=' + str(pageN)
     browser.get(URL)
     soup = BeautifulSoup(browser.page_source, features="html.parser")
@@ -101,12 +92,12 @@ def getJobList(pageN):
     with open('timvievnhanh.txt', 'w', encoding='utf-8') as f:
         for job_element in job_elements:
             jobLink = link + job_element['href']
-            getJobInfo(jobLink, f)
+            getJobInfo(jobLink, f, browser)
             time.sleep(2)
     
-def run():
+def run(browser):
     for page in range(1, 21):
-        getJobList(page)
+        getJobList(page, browser)
         time.sleep(3)
     
     browser.quit()
