@@ -8,7 +8,7 @@ options = Options()
 options.headless = True
 browser = webdriver.Firefox(
     options=options,
-    executable_path='./geckodriver'
+    executable_path='geckodriver'
 )
 
 link = 'https://www.careerlink.vn'
