@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from db.models import User, Job
 from models import job
 from sqlalchemy import and_, or_
+import math
 
 def add(db: Session, job: job.JobAdd, user: User):
     db_job = Job(
@@ -51,21 +52,43 @@ def delete(db: Session, id: int, user: User):
     db.query(Job).filter(and_(Job.id == id, Job.user_id == user.id)).delete()
     db.commit()
 
-def search(db: Session, text: str, skip: int, take: int):
+def search(db: Session, text: str, location: str, skip: int, take: int):
+    result = job.JobPage(
+        jobList = db.query(Job).filter(
+            and_(
+                or_(
+                    Job.title.like('%' + text + '%'),
+                    Job.link.like('%' + text + '%'),
+                    Job.description.like('%' + text + '%'),
+                    Job.category.like('%' + text + '%'),
+                    Job.requirement.like('%' + text + '%'),
+                    Job.company_name.like('%' + text + '%'),
+                    Job.company_description.like('%' + text + '%'),
+                    Job.location.like('%' + text + '%'),
+                    Job.company_size.like('%' + text + '%'),
+                    Job.company_logo.like('%' + text + '%'),
+                    Job.salary.like('%' + text + '%'),
+                    Job.post_date.like('%' + text + '%'),
+                    Job.language.like('%' + text + '%'),
+                ),
+                Job.location.like('%' + location + '%'),
+            )
+        ).offset(skip).limit(take).all(),
+        page = math.ceil(skip / take),
+        totalPage = math.ceil(db.query(Job).count() / take),
+        hasNext = False
+    )
+    
+    result.page += 1
+    
+    print(result.page)
+    print(result.totalPage)
+    print(result.page != result.totalPage)
+    result.hasNext = (result.page < result.totalPage)
+    
+    return result
+    
+def getById(db: Session, id: int):
     return db.query(Job).filter(
-        or_(
-            Job.title.like('%' + text + '%'),
-            Job.link.like('%' + text + '%'),
-            Job.description.like('%' + text + '%'),
-            Job.category.like('%' + text + '%'),
-            Job.requirement.like('%' + text + '%'),
-            Job.company_name.like('%' + text + '%'),
-            Job.company_description.like('%' + text + '%'),
-            Job.location.like('%' + text + '%'),
-            Job.company_size.like('%' + text + '%'),
-            Job.company_logo.like('%' + text + '%'),
-            Job.salary.like('%' + text + '%'),
-            Job.post_date.like('%' + text + '%'),
-            Job.language.like('%' + text + '%'),
-        )
-    ).offset(skip).limit(take).all()
+        Job.id == id
+    ).first()

@@ -22,6 +22,12 @@ class JobAdd(JobBase):
 class JobEdit(JobBase):
     pass
 
+class JobPage(BaseModel):
+    jobList: object
+    page: int
+    totalPage: int
+    hasNext: bool
+    
 class Job(JobBase):
     user_id: int
     class Config:

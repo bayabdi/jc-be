@@ -25,5 +25,9 @@ def delete(id: int, db: Session = Depends(get_db), email: str = Depends(auth_wra
     repositories.job.delete(db, id, user)    
 
 @router.get("/search")
-def get_jobs(text: str = '', skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return repositories.job.search(db, text, skip, limit)
+def get_jobs(text: str = '', location: str = '', skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return repositories.job.search(db, text, location, skip, limit)
+
+@router.get("/get")
+def get_job(id: int, db: Session = Depends(get_db)):
+    return repositories.job.getById(db, id)
