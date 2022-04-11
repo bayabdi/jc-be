@@ -21,7 +21,7 @@ def insert(
 ):
     try:
         # Connect to an existing database
-        connection = psycopg2.connect(user="postgres",
+        connection = psycopg2.connect(user="jcuser",
                                     password="string",
                                     host="localhost",
                                     port="5432",
