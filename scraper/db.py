@@ -16,11 +16,12 @@ def insert(
     company_logo,
     salary,
     post_date,
+    deadline,
     language
 ):
     try:
         # Connect to an existing database
-        connection = psycopg2.connect(user="jcuser",
+        connection = psycopg2.connect(user="postgres",
                                     password="string",
                                     host="localhost",
                                     port="5432",
@@ -43,6 +44,7 @@ def insert(
 	            company_logo,
 	            salary,
 	            post_date,
+                deadline,
 	            language
             )
 	        VALUES (
@@ -58,7 +60,8 @@ def insert(
 	            %s,
 	            %s,
 	            %s,
-	            %s
+	            %s,
+                %s
             );
         """
         
@@ -75,6 +78,7 @@ def insert(
             company_logo,
             salary,
             post_date,
+            deadline,
             language
         )
         
