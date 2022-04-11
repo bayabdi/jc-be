@@ -1,18 +1,14 @@
-from spider import careerlink_jobs
-#from spider import vietnamworks
-from spider import timviecnhanh
 from selenium.webdriver.firefox.options import Options
 from selenium import webdriver
-import os
-directory = os.getcwd() + '/geckodriver.exe'
+from webdriver_manager.firefox import GeckoDriverManager
+from spider import vn_applycv_com
+
+
 
 options = Options()
 options.headless = True
-browser = webdriver.Firefox(
-    options=options,
-    executable_path = directory
-)
+browser = webdriver.Firefox(options = options,executable_path = GeckoDriverManager().install())
 
-careerlink_jobs.run(browser)
-#vietnamworks.run()
-timviecnhanh.run(browser)
+vn_applycv_com.run(browser)
+
+browser.quit()

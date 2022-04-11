@@ -6,8 +6,8 @@ class Job(Base):
     __tablename__ = "job"
     
     id = Column(Integer, primary_key=True)
-    title = Column(String(500), unique=True)
-    link = Column(String(500))
+    title = Column(String(500))
+    link = Column(String(500), unique=True)
     description = Column(String(10000))
     category = Column(String(250))
     requirement = Column(String(10000))
@@ -18,6 +18,7 @@ class Job(Base):
     company_logo = Column(String(500))
     salary = Column(String(250))
     post_date = Column(String(250))
+    deadline = Column(String(250))
     language = Column(String(500))
     
     user_id = Column(Integer, ForeignKey('user.id'))
