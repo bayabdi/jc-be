@@ -7,15 +7,19 @@ import time
 
 
 while (True):
-    print("begin")
-    options = Options()
-    options.headless = True
-    browser = webdriver.Firefox(options = options,executable_path = GeckoDriverManager().install())
+    try:
+        print("begin")
+        options = Options()
+        options.headless = True
+        browser = webdriver.Firefox(options = options,executable_path = GeckoDriverManager().install())
 
-    vn_applycv_com.run(browser)
-    vietnocv_io.run(browser)
-    browser.quit()
-    print("end")
-    print()
-    
-    time.sleep(24 * 60 * 60)
+        try:
+            vn_applycv_com.run(browser)
+        finally:
+            vietnocv_io.run(browser)
+        print("end")
+        print()
+        
+        time.sleep(24 * 60 * 60)
+    finally:
+        browser.quit()
