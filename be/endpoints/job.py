@@ -17,6 +17,10 @@ def add(job: job.JobAdd, db: Session = Depends(get_db), email: str = Depends(aut
 
 @router.post("/edit", dependencies=[Depends(auth_wrapper)])
 def edit(job: job.JobEdit, db: Session = Depends(get_db), email: str = Depends(auth_wrapper)):
+    model = repositories.job.get_by_link(db, job.link)
+    if model and model.id != job.id:  
+        raise HTTPException(status_code = 409, detail = 'Link is taken')
+    
     user = repositories.user.get_by_email(db, email)
     return repositories.job.edit(db, job, user)
 

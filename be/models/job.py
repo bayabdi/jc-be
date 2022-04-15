@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 class JobBase(BaseModel):
-    id: int
     title: str
     link: str
     description: str
@@ -20,6 +19,7 @@ class JobAdd(JobBase):
     pass
 
 class JobEdit(JobBase):
+    id: int
     pass
 
 class JobPage(BaseModel):
@@ -29,6 +29,7 @@ class JobPage(BaseModel):
     hasNext: bool
     
 class Job(JobBase):
+    id: int
     user_id: int
     class Config:
         orm_mode = True
