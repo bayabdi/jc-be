@@ -88,7 +88,10 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     result.hasNext = (result.page < result.totalPage)
     
     return result
-    
+
+def get_by_link(db: Session, link: str):
+    return db.query(Job).filter(Job.link == link).first()
+
 def getById(db: Session, id: int):
     return db.query(Job).filter(
         Job.id == id
