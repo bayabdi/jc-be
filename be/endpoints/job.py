@@ -14,7 +14,7 @@ def add(job: job.JobAdd, db: Session = Depends(get_db), email: str = Depends(aut
     user = repositories.user.get_by_email(db, email)
     return repositories.job.add(db, job, user)
 
-@router.post("/edit", response_model=job.Job, dependencies=[Depends(auth_wrapper)])
+@router.post("/edit", dependencies=[Depends(auth_wrapper)])
 def edit(job: job.JobEdit, db: Session = Depends(get_db), email: str = Depends(auth_wrapper)):
     user = repositories.user.get_by_email(db, email)
     return repositories.job.edit(db, job, user)

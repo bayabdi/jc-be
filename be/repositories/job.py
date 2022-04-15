@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from db.models import User, Job
+from db.models import User, Job 
 from models import job
 from sqlalchemy import and_, or_
 import math
@@ -28,21 +28,22 @@ def add(db: Session, job: job.JobAdd, user: User):
     return db_job
 
 def edit(db: Session, job: job.JobEdit, user: User):
-    db_job = db.query(Job).filter(and_(Job.id == job.id, Job.user_id == user.id)).first()
+    db_job = db.query(Job).filter(and_(Job.id == job.id)).first()
     
-    db_job.title = job.title,
-    db_job.link = job.link,
-    db_job.description = job.description,
-    db_job.category = job.category,
-    db_job.requirement = job.requirement,
-    db_job.company_name = job.company_name,
-    db_job.company_description = job.company_description,
-    db_job.location = job.location,
-    db_job.company_size = job.company_size,
-    db_job.company_logo = job.company_logo,
-    db_job.salary = job.salary,
-    db_job.post_date = job.post_date,
-    db_job.language = job.language,
+    if db_job != None:
+        db_job.title = job.title,
+        db_job.link = job.link,
+        db_job.description = job.description,
+        db_job.category = job.category,
+        db_job.requirement = job.requirement,
+        db_job.company_name = job.company_name,
+        db_job.company_description = job.company_description,
+        db_job.location = job.location,
+        db_job.company_size = job.company_size,
+        db_job.company_logo = job.company_logo,
+        db_job.salary = job.salary,
+        db_job.post_date = job.post_date,
+        db_job.language = job.language,
     
     db.commit()
     

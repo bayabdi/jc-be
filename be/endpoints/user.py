@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/signup", status_code=201)
 def signup(model: user.SignUp, db: Session = Depends(get_db)):
     if repositories.user.get_by_email(db, model.email):  
-        raise HTTPException(status_code = 400, detail = 'Email is taken')
+        raise HTTPException(status_code = 409, detail = 'Email is taken')
     repositories.user.create(db, model)
     
     return encode_token(model.email)
@@ -22,3 +22,7 @@ def login(model: user.Auth, db: Session = Depends(get_db)):
     if (user is None) or (not verify_password(model.password, user.hashed_password)):
         raise HTTPException(status_code = 401, detail = "Invalid email and/or password")
     return encode_token(user.email)
+
+@router.get("/check_token", dependencies=[Depends(auth_wrapper)])
+def check_token():
+    return
