@@ -5,6 +5,8 @@ import db
 def getJobInfo(job_link, browser):
     browser.get(job_link)
     soup = BeautifulSoup(browser.page_source, features="html.parser")
+
+    print(job_link)
     
     title = ''
     if len(soup.select('h1.title')) > 0:
@@ -99,6 +101,6 @@ def getJobList(pageN, browser):
     
     
 def run(browser):
-    for page in range(1, 21):
+    for page in range(1, 5):
         getJobList(page, browser)
         time.sleep(3)
