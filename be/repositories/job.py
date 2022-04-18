@@ -3,11 +3,19 @@ from db.models import User, Job
 from models import job
 from sqlalchemy import and_, or_
 import math
+from sqlalchemy.sql.expression import func
 
 def add(db: Session, job: job.JobAdd, user: User):
+    mid = db.query(func.max(Job.id)).scalar()
+    
+    if not mid:
+        mid = 1
+    else:
+        mid += 1
+        
     db_job = Job(
         title = job.title,
-        link = job.link,
+        link = str(mid),
         description = job.description,
         category = job.category,
         requirement = job.requirement,

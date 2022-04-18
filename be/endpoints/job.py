@@ -10,8 +10,6 @@ router = APIRouter()
 
 @router.post("/add", response_model=job.Job, dependencies=[Depends(auth_wrapper)])
 def add(job: job.JobAdd, db: Session = Depends(get_db), email: str = Depends(auth_wrapper)):
-    if repositories.job.get_by_link(db, job.link):  
-        raise HTTPException(status_code = 409, detail = 'Link is taken')
     user = repositories.user.get_by_email(db, email)
     return repositories.job.add(db, job, user)
 
