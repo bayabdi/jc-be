@@ -19,6 +19,7 @@ class JobAdd(JobBase):
 
 class JobEdit(JobBase):
     id: int
+    link: str
     pass
 
 class JobPage(BaseModel):
