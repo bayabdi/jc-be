@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from db.models import User, Job 
+from db.models import User, Job, Query
 from models import job
 from sqlalchemy import and_, or_
 import math
@@ -62,6 +62,14 @@ def delete(db: Session, id: int, user: User):
     db.commit()
 
 def search(db: Session, text: str, location: str, skip: int, take: int):
+    db_query = Query(
+        text = text,
+        location = location
+    )
+    
+    db.add(db_query)
+    db.commit()
+    
     jobList = db.query(Job).filter(
         and_(
             or_(
