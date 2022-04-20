@@ -62,29 +62,31 @@ def delete(db: Session, id: int, user: User):
     db.commit()
 
 def search(db: Session, text: str, location: str, skip: int, take: int):
+    jobList = db.query(Job).filter(
+        and_(
+            or_(
+                Job.title.like('%' + text + '%'),
+                Job.link.like('%' + text + '%'),
+                Job.description.like('%' + text + '%'),
+                Job.category.like('%' + text + '%'),
+                Job.requirement.like('%' + text + '%'),
+                Job.company_name.like('%' + text + '%'),
+                Job.company_description.like('%' + text + '%'),
+                Job.location.like('%' + text + '%'),
+                Job.company_size.like('%' + text + '%'),
+                Job.company_logo.like('%' + text + '%'),
+                Job.salary.like('%' + text + '%'),
+                Job.post_date.like('%' + text + '%'),
+                Job.language.like('%' + text + '%'),
+            ),
+            Job.location.like('%' + location + '%'),
+        )
+    ).offset(skip).limit(take).all()
+    
     result = job.JobPage(
-        jobList = db.query(Job).filter(
-            and_(
-                or_(
-                    Job.title.like('%' + text + '%'),
-                    Job.link.like('%' + text + '%'),
-                    Job.description.like('%' + text + '%'),
-                    Job.category.like('%' + text + '%'),
-                    Job.requirement.like('%' + text + '%'),
-                    Job.company_name.like('%' + text + '%'),
-                    Job.company_description.like('%' + text + '%'),
-                    Job.location.like('%' + text + '%'),
-                    Job.company_size.like('%' + text + '%'),
-                    Job.company_logo.like('%' + text + '%'),
-                    Job.salary.like('%' + text + '%'),
-                    Job.post_date.like('%' + text + '%'),
-                    Job.language.like('%' + text + '%'),
-                ),
-                Job.location.like('%' + location + '%'),
-            )
-        ).offset(skip).limit(take).all(),
+        jobList = jobList,
         page = math.ceil(skip / take),
-        totalPage = math.ceil(db.query(Job).count() / take),
+        totalPage = math.ceil(len(jobList) / take),
         hasNext = False
     )
     
