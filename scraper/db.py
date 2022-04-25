@@ -1,7 +1,14 @@
 import psycopg2
 from psycopg2 import Error
+from googletrans import Translator
 
 
+def translate(text):
+    if text == '':
+        return ''
+    
+    translator = Translator()
+    return str(translator.translate(text, src='vi', dest='en').text)
 
 def insert(
     title,
@@ -45,7 +52,16 @@ def insert(
 	            salary,
 	            post_date,
                 deadline,
-	            language
+	            language,
+                title_en,
+                description_en,
+                category_en,
+                requirement_en,
+                company_name_en,
+                company_description_en,
+                location_en,
+                salary_en,
+                language_en
             )
 	        VALUES (
                 %s,
@@ -54,6 +70,15 @@ def insert(
 	            %s,
 	            %s,
 	            %s,
+	            %s,
+	            %s,
+	            %s,
+	            %s,
+	            %s,
+	            %s,
+	            %s,
+                %s,
+                %s,
 	            %s,
 	            %s,
 	            %s,
@@ -79,7 +104,16 @@ def insert(
             salary,
             post_date,
             deadline,
-            language
+            language,
+            translate(title),
+            translate(description),
+            translate(category),
+            translate(requirement),
+            translate(company_name),
+            translate(company_description),
+            translate(location),
+            translate(salary),
+            translate(language)
         )
         
         cursor.execute(sql, data)
