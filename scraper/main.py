@@ -14,5 +14,7 @@ schedule.every().day.at("15:00").do(vn_applycv_com.run(browser))
 schedule.every().day.at("16:00").do(vietnocv_io.run(browser))
 
 while True:
-    schedule.run_pending()
-    time.sleep(1)
+    try:
+        schedule.run_pending()
+    finally:
+        time.sleep(1)

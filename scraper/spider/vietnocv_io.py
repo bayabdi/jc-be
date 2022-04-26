@@ -100,4 +100,7 @@ def getJobList(browser):
         #return
         
 def run(browser):
-    getJobList(browser)
+    try:
+        getJobList(browser)
+    finally:
+        time.sleep(1)

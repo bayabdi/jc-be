@@ -102,5 +102,7 @@ def getJobList(pageN, browser):
     
 def run(browser):
     for page in range(1, 5):
-        getJobList(page, browser)
-        time.sleep(3)
+        try:
+            getJobList(page, browser)
+        finally:
+            time.sleep(3)
