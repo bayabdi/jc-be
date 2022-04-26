@@ -10,8 +10,16 @@ options = Options()
 options.headless = True
 browser = webdriver.Firefox(options = options,executable_path = GeckoDriverManager().install())
 
-schedule.every().day.at("15:00").do(vn_applycv_com.run(browser))
-schedule.every().day.at("16:00").do(vietnocv_io.run(browser))
+def run():
+    try:
+        vn_applycv_com.run(browser)
+    finally:
+        try:
+            vietnocv_io.run(browser)
+        finally:
+            print("FINISH")
+        
+schedule.every().day.do(run)
 
 while True:
     try:
