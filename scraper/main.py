@@ -19,7 +19,7 @@ def run():
         finally:
             print("FINISH")
         
-schedule.every().day.do(run)
+schedule.every().day.at("00:00").do(run)
 
 while True:
     try:
