@@ -136,7 +136,7 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
                 Job.post_date.like('%' + text + '%'),
                 Job.language_en.like('%' + text + '%'),
             ),
-            Job.location.like('%' + location + '%'),
+            Job.location_en.like('%' + location + '%'),
         )
     ).order_by(Job.id.desc()).offset(skip).limit(take).all()
     
