@@ -97,8 +97,11 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     
     translator = Translator()
     
-    text = translate(translator, text)
-    location = translate(translator, location)
+    text = func.lower(translate(translator, text))
+    location = func.lower(translate(translator, location))
+    
+    print(text)
+    print(location)
     
     db.add(db_query)
     db.commit()
@@ -122,21 +125,21 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     ).filter(
         and_(
             or_(
-                Job.title_en.like('%' + text + '%'),
-                Job.link.like('%' + text + '%'),
-                Job.description_en.like('%' + text + '%'),
-                Job.category_en.like('%' + text + '%'),
-                Job.requirement_en.like('%' + text + '%'),
-                Job.company_name_en.like('%' + text + '%'),
-                Job.company_description_en.like('%' + text + '%'),
-                Job.location_en.like('%' + text + '%'),
-                Job.company_size.like('%' + text + '%'),
-                Job.company_logo.like('%' + text + '%'),
-                Job.salary_en.like('%' + text + '%'),
-                Job.post_date.like('%' + text + '%'),
-                Job.language_en.like('%' + text + '%'),
+                func.lower(Job.title_en).like('%' + text + '%'),
+                func.lower(Job.link).like('%' + text + '%'),
+                func.lower(Job.description_en).like('%' + text + '%'),
+                func.lower(Job.category_en).like('%' + text + '%'),
+                func.lower(Job.requirement_en).like('%' + text + '%'),
+                func.lower(Job.company_name_en).like('%' + text + '%'),
+                func.lower(Job.company_description_en).like('%' + text + '%'),
+                func.lower(Job.location_en).like('%' + text + '%'),
+                func.lower(Job.company_size).like('%' + text + '%'),
+                func.lower(Job.company_logo).like('%' + text + '%'),
+                func.lower(Job.salary_en).like('%' + text + '%'),
+                func.lower(Job.post_date).like('%' + text + '%'),
+                func.lower(Job.language_en).like('%' + text + '%'),
             ),
-            Job.location_en.like('%' + location + '%'),
+            func.lower(Job.location_en).like('%' + location + '%'),
         )
     ).order_by(Job.id.desc()).offset(skip).limit(take).all()
     
