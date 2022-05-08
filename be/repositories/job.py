@@ -145,11 +145,11 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
             ),
             func.lower(Job.location_en).like('%' + location + '%'),
         )
-    ).order_by(Job.id.desc()).offset(skip).limit(take).all()
+    ).order_by(Job.id.desc()).offset(skip * take).limit(take).all()
     
     result = job.JobPage(
         jobList = jobList,
-        page = math.ceil(skip / take),
+        page = math.ceil(skip + 1),
         totalPage = math.ceil(len(jobList) / take),
         hasNext = False
     )
