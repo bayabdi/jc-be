@@ -2,6 +2,8 @@ from pydantic import BaseModel
 
 class JobBase(BaseModel):
     title: str
+    link: str
+    deadline: str
     description: str
     category: str
     requirement: str

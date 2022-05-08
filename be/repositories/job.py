@@ -11,14 +11,17 @@ def add(db: Session, job: job.JobAdd, user: User):
     
     translator = Translator()
     
-    if not mid:
-        mid = 1
-    else:
-        mid += 1
-        
+    
+    if job.link == '':
+        if not mid:
+            mid = 1
+        else:
+            mid += 1
+        job.link = str(mid)
+    
     db_job = Job(
         title = job.title,
-        link = str(mid),
+        link = job.link,
         description = job.description,
         category = job.category,
         requirement = job.requirement,
@@ -31,6 +34,7 @@ def add(db: Session, job: job.JobAdd, user: User):
         post_date = job.post_date,
         language = job.language,
         user_id = user.id,
+        deadline = job.deadline,
         title_en = translate(translator, job.title),
         description_en = translate(translator, job.description),
         category_en = translate(translator, job.category),
