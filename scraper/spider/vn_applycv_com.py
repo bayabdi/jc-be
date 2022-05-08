@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import time
-import db
+import api
 
 def getJobInfo(job_link, browser):
     browser.get(job_link)
@@ -66,7 +66,7 @@ def getJobInfo(job_link, browser):
             if label == 'Hạn nộp hồ sơ':
                 deadline = value           
     
-    db.insert(
+    api.insert(
         title,
         job_link,
         description,

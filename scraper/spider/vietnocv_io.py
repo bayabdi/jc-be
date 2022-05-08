@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import time
-import db
+import api
 
 def getJobInfo(job_link, browser):
     browser.get(job_link)
@@ -63,7 +63,7 @@ def getJobInfo(job_link, browser):
     post_date = ''
     
     
-    db.insert(
+    api.insert(
         title,
         job_link,
         description,
@@ -79,6 +79,7 @@ def getJobInfo(job_link, browser):
         deadline,
         language
     )
+    
 def getJobList(browser):
     link = 'https://vietcv.io'
     URL = link + '/jobs/discover'

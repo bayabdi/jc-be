@@ -37,11 +37,11 @@ def insert(
     
     headers = CaseInsensitiveDict()
     headers['Authorization'] = "Bearer " + token
-    headers["Content-Type"] = "application/json"
-    headers["Accept"] = "application/json"
     
     data = {
         "title": title,
+        "link": link,
+        "deadline": deadline,
         "description": description,
         "category": category,
         "requirement": requirement,
@@ -54,3 +54,16 @@ def insert(
         "post_date": post_date,
         "language": language
     }
+    
+    url = 'https://api.jobcado.com/job/add'
+    
+    response = requests.post(url, json = data, headers = headers)
+    
+    print(response.status_code)
+    
+    if response.status_code == 200:
+        print("OK")
+    elif response.status_code == 409:
+        print("Link is taken")
+    else:
+        print("FAILED")
