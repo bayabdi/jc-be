@@ -147,10 +147,12 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
         )
     ).order_by(Job.id.desc()).offset(skip * take).limit(take).all()
     
+    
+    
     result = job.JobPage(
         jobList = jobList,
         page = math.ceil(skip + 1),
-        totalPage = math.ceil(len(jobList) / take),
+        totalPage = math.ceil(len(db.query(Job).all()) / take),
         hasNext = False
     )
     
