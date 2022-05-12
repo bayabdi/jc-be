@@ -104,9 +104,6 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     text = func.lower(translate(translator, text))
     location = func.lower(translate(translator, location))
     
-    print(text)
-    print(location)
-    
     db.add(db_query)
     db.commit()
     
@@ -151,7 +148,7 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     
     result = job.JobPage(
         jobList = jobList,
-        page = math.ceil(skip + 1),
+        page = skip,
         totalPage = math.ceil(len(db.query(Job).all()) / take),
         hasNext = False
     )
