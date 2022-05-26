@@ -8,21 +8,14 @@ import time
 
 options = Options()
 options.headless = True
-browser = webdriver.Firefox(options = options,executable_path = GeckoDriverManager().install())
+browser = webdriver.Firefox(options = options,
+    executable_path = GeckoDriverManager().install())
 
-def run():
+while True:
     try:
-        vn_applycv_com.run(browser)
+         vn_applycv_com.run(browser)
     finally:
         try:
             vietnocv_io.run(browser)
         finally:
-            print("FINISH")
-        
-schedule.every().day.at("00:00").do(run)
-
-while True:
-    try:
-        schedule.run_pending()
-    finally:
-        time.sleep(1)
+            time.sleep(24 * 60 * 60)
