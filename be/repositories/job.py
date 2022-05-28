@@ -149,7 +149,7 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     result = job.JobPage(
         jobList = jobList,
         page = skip,
-        totalPage = math.ceil(len(db.query(Job).all()) / take),
+        totalPage = math.ceil(len(jobList) / take),
         hasNext = False
     )
     
