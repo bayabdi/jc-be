@@ -144,12 +144,31 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
         )
     ).order_by(Job.id.desc()).offset(skip * take).limit(take).all()
     
-    
+    list = db.query(Job).filter(
+        and_(
+            or_(
+                func.lower(Job.title_en).like('%' + text + '%'),
+                func.lower(Job.link).like('%' + text + '%'),
+                func.lower(Job.description_en).like('%' + text + '%'),
+                func.lower(Job.category_en).like('%' + text + '%'),
+                func.lower(Job.requirement_en).like('%' + text + '%'),
+                func.lower(Job.company_name_en).like('%' + text + '%'),
+                func.lower(Job.company_description_en).like('%' + text + '%'),
+                func.lower(Job.location_en).like('%' + text + '%'),
+                func.lower(Job.company_size).like('%' + text + '%'),
+                func.lower(Job.company_logo).like('%' + text + '%'),
+                func.lower(Job.salary_en).like('%' + text + '%'),
+                func.lower(Job.post_date).like('%' + text + '%'),
+                func.lower(Job.language_en).like('%' + text + '%'),
+            ),
+            func.lower(Job.location_en).like('%' + location + '%'),
+        )
+    ).all()
     
     result = job.JobPage(
         jobList = jobList,
         page = skip,
-        totalPage = math.ceil(len(jobList) / take),
+        totalPage = math.ceil(len(list) / take),
         hasNext = False
     )
     
