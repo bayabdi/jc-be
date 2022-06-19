@@ -95,7 +95,7 @@ def delete(db: Session, id: int, user: User):
 
 def search(db: Session, text: str, location: str, skip: int, take: int):
     db_query = Query(
-        text = text,
+        text = text.lower(),
         location = location
     )
     
@@ -104,8 +104,9 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     text = func.lower(translate(translator, text))
     location = func.lower(translate(translator, location))
     
-    db.add(db_query)
-    db.commit()
+    if db.query(Query).filter(func.lower(Query.text) == db_query.text).count() < 1:
+        db.add(db_query)
+        db.commit()
     
     jobList = db.query(
         Job.id,
