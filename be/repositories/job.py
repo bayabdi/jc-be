@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
-from db.models import User, Job, Query
+from db.models import User, Job, Query, Keyword
 from models import job
 from sqlalchemy import and_, or_
 import math
 from sqlalchemy.sql.expression import func
 from googletrans import Translator
+import unidecode
 
 def add(db: Session, job: job.JobAdd, user: User):
     mid = db.query(func.max(Job.id)).scalar()
@@ -35,15 +36,15 @@ def add(db: Session, job: job.JobAdd, user: User):
         language = job.language,
         user_id = user.id,
         deadline = job.deadline,
-        title_en = translate(translator, job.title),
-        description_en = translate(translator, job.description),
-        category_en = translate(translator, job.category),
-        requirement_en = translate(translator, job.requirement),
-        company_name_en = translate(translator, job.company_name),
-        company_description_en = translate(translator, job.company_description),
-        location_en = translate(translator, job.location),
-        salary_en = translate(translator, job.salary),
-        language_en = translate(translator, job.language)
+        title_en = translate(db, translator, job.title),
+        description_en = translate(db, translator, job.description),
+        category_en = translate(db, translator, job.category),
+        requirement_en = translate(db, translator, job.requirement),
+        company_name_en = translate(db, translator, job.company_name),
+        company_description_en = translate(db, translator, job.company_description),
+        location_en = translate(db, translator, job.location),
+        salary_en = translate(db, translator, job.salary),
+        language_en = translate(db, translator, job.language)
     )
     db.add(db_job)
     db.commit()
@@ -51,11 +52,23 @@ def add(db: Session, job: job.JobAdd, user: User):
     
     return db_job
 
-def translate(translator, text):
+def translate(db, translator, text):
     if text == '':
         return ''
-    return translator.translate(text, src='vi', dest='en').text
+    text = text.lower()
+    trans_text = translator.translate(text, src='vi', dest='en').text.lower()
 
+    if trans_text == text:
+        text = unidecode.unidecode(text).lower()
+        keyword = db.query(Keyword).filter(func.lower(Keyword.unaccented_text) == text).first()
+
+        if (keyword == None):
+            return text
+        return keyword.text_en
+        
+    return trans_text
+    
+    
 def edit(db: Session, job: job.JobEdit, user: User):
     db_job = db.query(Job).filter(and_(Job.id == job.id)).first()
     
@@ -63,27 +76,27 @@ def edit(db: Session, job: job.JobEdit, user: User):
     
     if db_job != None:
         db_job.title = job.title,
-        db_job.title_en = translate(translator, db_job.title),
+        db_job.title_en = translate(db, translator, db_job.title),
         db_job.link = job.link,
         db_job.description = job.description,
-        db_job.description_en = translate(translator, db_job.description),
+        db_job.description_en = translate(db, translator, db_job.description),
         db_job.category = job.category,
-        db_job.category_en = translate(translator, db_job.category),
+        db_job.category_en = translate(db, translator, db_job.category),
         db_job.requirement = job.requirement,
-        db_job.requirement_en = translate(translator, db_job.requirement),
+        db_job.requirement_en = translate(db, translator, db_job.requirement),
         db_job.company_name = job.company_name,
-        db_job.company_name_en = translate(translator, db_job.company_name),
+        db_job.company_name_en = translate(db, translator, db_job.company_name),
         db_job.company_description = job.company_description,
-        db_job.company_description_en = translate(translator, db_job.company_description),
+        db_job.company_description_en = translate(db, translator, db_job.company_description),
         db_job.location = job.location,
-        db_job.location_en = translate(translator, db_job.location),
+        db_job.location_en = translate(db, translator, db_job.location),
         db_job.company_size = job.company_size,
         db_job.company_logo = job.company_logo,
         db_job.salary = job.salary,
-        db_job.salary_en = translate(translator, db_job.salary),
+        db_job.salary_en = translate(db, translator, db_job.salary),
         db_job.post_date = job.post_date,
         db_job.language = job.language,
-        db_job.language_en = translate(translator, db_job.language),
+        db_job.language_en = translate(db, translator, db_job.language),
     
     db.commit()
     
@@ -101,8 +114,8 @@ def search(db: Session, text: str, location: str, skip: int, take: int):
     
     translator = Translator()
     
-    text = func.lower(translate(translator, text))
-    location = func.lower(translate(translator, location))
+    text = func.lower(translate(db, translator, text))
+    location = func.lower(translate(db, translator, location))
     
     if db.query(Query).filter(func.lower(Query.text) == db_query.text).count() < 1:
         db.add(db_query)

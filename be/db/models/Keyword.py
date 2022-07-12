@@ -5,6 +5,7 @@ class Keyword(Base):
     __tablename__ = "keyword"
     
     id = Column(Integer, primary_key=True)
+    unaccented_text = Column(String(500))
     text = Column(String(500))
     text_en = Column(String(500))
     
